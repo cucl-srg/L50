@@ -1,2 +1,2 @@
-# L50-clean
-ACS L50 course repository
+# L50
+Introduction to networking and systems measurements (L50) repository

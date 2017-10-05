@@ -1,0 +1,271 @@
+\documentclass[]{scrartcl}
+\usepackage{graphicx}
+\usepackage{placeins}
+\usepackage{url}
+
+
+%opening
+\title{L50 Labs}
+\author{Dr Noa Zilberman, Dr Andrew Moore}
+\date{Michaelmas, 2017/18}
+
+\begin{document}
+
+\maketitle
+
+This document provides useful information required for the practicals.  
+All the information is located at: \url{https://github.com/cucl-srg/L50}.
+
+\section{Test Machines}
+
+
+Each experiment uses two machines, known as Machine A and Machine B. The setup of Machine A and Machine B is different, however all the A machines and all the B machines are the same. 
+
+You will be assigned one pair of machines to use per lab session and the machines are located in the Practical Classroom. This provides access to the machines, so you can change the physical connectivity according to the experiment. \\
+
+You will interact with the machines via ssh:
+
+\begin{enumerate}
+	\item On a computer in the Practical Classroom, log in using your own UIS credentials.
+	\item \texttt{ssh -X root@<hostname>.nf.cl.cam.ac.uk} and enter the password. Hosts ending in .cl.cam.ac.uk are permitted to ssh into these machines. \texttt{-X} enables X11 forwarding, allowing you to run graphical applications. The bash prompt and Firefox theme are red on Machine A, and blue on Machine B.\\
+	\\
+	\begin{tabular}{| l | l | l|}
+		\hline
+		Machine & hostname & IP Address  \\ \hline
+		A1 & nf-test109 & 128.232.97.86  \\ \hline
+		B1 & nf-test103 & 128.232.97.126 \\ \hline
+		A2 & nf-test101 & 128.232.97.84 \\ \hline
+		B2 & nf-test110 & 128.232.97.93 \\ \hline
+		A3 & nf-test111 & 128.232.32.81 \\ \hline
+		B3 & nf-test108 & 128.232.32.78 \\
+		\hline
+	\end{tabular}
+\end{enumerate}	
+
+\noindent\textbf{Important: The IP addresses noted above should not be used for anything except for communication with the machines. The network interfaces assigned for the tests use different IP addresses.}
+
+\newpage
+
+\section{Repository Structure}
+\textbf{Important: As multiple teams may work on the same machines, clone the repository to a local folder under your crsid, e.g., $\sim$/nz247/L50.}
+\begin{itemize}
+	\item \texttt{Jupyter} \\
+		\begin{itemize}
+			\item Notebook templates (\texttt{.ipynb}) \\
+				You will use Jupyter Notebook to run the experiments and save the results. 
+			\item \texttt{useful} \\
+				The 'useful' scripts include functions which you will use in the Notebooks, to simplify data processing. These are documented later in Section~\ref{sec:useful}.\\ \texttt{generator.lua} is an exception, as it is a prepared script used in Lab~3 by the packet generation tool ``MoonGen''.
+		\end{itemize}
+	\item\texttt{handouts} \\
+	Practical sessions handouts. 
+	\item \texttt{lab-report} \\
+    A provided template for lab reports. 
+    \item \texttt{lectures} \\
+    Lecture slides. 
+	\item \texttt{pcap{\_}files} \\
+	pcap files are packet capture files, which are loaded into traffic generation tools to be replayed. You can view the details of the pcap files by opening them in, e.g., Wireshark. For these prepared files, the filename reflects the packet size in bytes within the host (packet size on the wire is +4 bytes).
+	\item \texttt{setup} \\
+	This folder contains various scripts for setting up tools and creating directories in which to save results.
+\end{itemize}
+
+\begin{figure}[h]
+	\centering
+	\includegraphics[width=0.3\linewidth]{"L50_filestructure"}
+	\caption{Repository Structure}
+	\label{fig:filestructure}
+\end{figure}
+
+
+\section{Jupyter Notebooks}
+The Jupyter Notebook is an open-source web application that allows you to create and share documents that contain live code, equations, visualizations and explanatory text.
+
+You will use Jupyter Notebook to run the experiments and save the results. The templates are designed to run on Machine A and results are saved to Machine A.\\
+\noindent To copy a remote directory onto your local machine, \texttt{sftp root@<hostname>.nf.cl.cam.ac.uk} and \texttt{get -r <directory>}.\\
+\noindent Exporting a Notebook as \texttt{.tex} will save graphs as separate files, which you can then include in your lab report.\\
+				
+\noindent Starting a Jupyter session: after you \texttt{ssh -X} into Machine A, type the following:
+\\\texttt{cd L50/Jupyter {\&\&} jupyter notebook --allow-root}\\
+(\texttt{pkill firefox} if Firefox is already running.) 
+
+There are several places where you can find more information on using Jupyter:
+\begin{itemize}
+	\item Jupyter-Notebook page on the course's wiki.
+	\item guide.ipynb under the handouts folder.
+	\item Jupyter documentation: \url{https://jupyter-notebook.readthedocs.io/en/latest/notebook.html} 
+	\item Jupyter-Notebook Basics page: \url{http://nbviewer.jupyter.org/github/jupyter/notebook/blob/master/docs/source/examples/Notebook/Notebook%20Basics.ipynb}
+\end{itemize}
+
+
+
+
+\section{Test Setup}
+
+The following special equipment is used in the classes:
+\begin{itemize}
+	\item Solarflare network interface cards (NIC) - SFN6122F (Machine A)\\
+	Solarflare network ports are marked \textit{slf0} and \textit{slf1}.
+	\item Endance DAG card, used for traffic capture (Machine A)\\
+	DAG network ports are marked \textit{dag0} and \textit{dag1}.
+	\item Intel NIC - X520 (Machine B)\\
+	Intel network ports are marked \textit{intl0} and \textit{intl1}.
+	\item NetFPGA SUME board, used as a traffic generator (Machine B)\\
+	NetFPGA network ports are marked \textit{nf0} to \textit{nf3}.
+	\item Optical fibers - duplex fibres with separate strands for transmitting and receiving.
+	\item Optical 10G transceivers (SFP+) - converting electrical signals to optical signals and vice versa.
+	\item Optical Tap - extracts the signal sent from one point to the other, without breaking the connection, and transmits the signal on a third port.
+	Figures~\ref{fig:tap2} and~\ref{fig:tap} illustrate the tap's operation.
+\end{itemize}
+	
+	The network port markings noted above apply only to Figure~\ref{fig:machA} and Figure~\ref{fig:machB}. The name of the port on each machine may differ, (e.g.,\textit{eth1}).
+	
+	\begin{figure}
+		\includegraphics[width=0.5\linewidth]{"tap2"}
+		\centering
+		\caption{Using the tap as a splitter, in one direction.}
+		\label{fig:tap2}
+	\end{figure}
+	\begin{figure}
+		\includegraphics[width=0.5\linewidth]{"tap"}
+		\centering
+		\caption{Using the tap to capture traffic originating from two interfaces.}
+		\label{fig:tap}
+	\end{figure}
+
+
+
+	\begin{figure}
+		\includegraphics[width=0.45\linewidth]{"machineA"}
+		\centering
+		\caption{Machine A}
+		\label{fig:machA}
+	\end{figure}
+
+	\begin{figure}
+		\includegraphics[width=0.45\linewidth]{"machineB"}
+		\centering
+		\caption{Machine B}
+		\label{fig:machB}
+	\end{figure}
+	\FloatBarrier
+	
+\section{'Useful' functions}\label{sec:useful}
+
+\subsection{\texttt{useful.py}}
+This script provide useful functions for all practical sessions.\\
+
+\noindent\texttt{local{\_}cmd(command)}  \\
+Executes Terminal command on local machine. Returns after the command exits.  \\
+Input: command, eg. 'echo blah'  \\
+Output: Terminal output as a string \\
+\\
+\texttt{ssh{\_}connect(host)}  \\
+Connect to a remote machine using ssh.\\
+Input: IP address of remote machine, eg '128.128.128.128'  \\
+Output: paramiko.SSHClient instance (paramiko is a python implementation of ssh v2) \\
+\\
+\texttt{ssh{\_}cmd(command, ssh)}  \\
+Executes a command on remote machine.  \\
+Input: command = command. ssh = paramiko.SSHClient instance.  \\
+Output: Terminal output (if any).
+\\
+\subsection{\texttt{useful1.py}}
+This script provide useful functions for Lab 1\\
+
+\noindent\texttt{getrtt(ffile,num)}   \\
+Parses a file with RTT results from a ping command.\\ 
+Input: ffile = '[folder]/[file]', eg. '1/exp1a{\_}0'. num = number of pings.  \\
+Output: list of RTTs in microseconds  \\
+\\
+\texttt{graph1(exp,div,num)}  \\
+Plots graph1 in Lab 1.  \\
+Input: exp = experiment name, eg. 'exp1a'. div = gaps between error bars. num = number of pings.  \\
+\\
+\texttt{graph5{\_}000001(exp,usecs,num)}  \\
+Plots graph5 for an interval of 0.000001 seconds.  \\
+Input: exp = experiment name. usecs = list of rx-usecs. num = number of pings.  \\
+\\
+\texttt{graph5{\_}001(exp,usecs,num)}  \\
+Plots graph5 for an interval of 0.001 seconds.  \\
+Input: exp = experiment name. usecs = list of rx-usecs. num = number of pings.  \\
+\\
+\texttt{data{\_}iperf(fexp)}  \\
+Parses the iperf test results.\\
+Input: '[folder]/[exp]', eg. '1/exp1a'   \\
+Output: list of 5 bandwidth values in Gbits/sec for each measurement interval  \\
+{[  [5x bw for 0-1 sec]  ,  ...  ,  [5x bw for 9-10 sec]  ]} \\
+\\
+\texttt{data10()}  \\
+Parses the data for experiment 10.\\
+Output:  tuple containing iperf bandwidth valuess in Gbits/sec of 1. server 2. client  \\
+(  [  [5x bw for 0-1sec (ser)]  ,  ... ,  [5x bw for 9-10sec (ser)]  ] ,  \\
+{[  [5x bw for 0-1sec (cli)]  ,  ...  ,  [5x bw for 9-10sec (cli)]  ]}  )  \\
+\\
+\texttt{data11(windows)}  \\
+Parses the data for experiment 10.\\
+Input: list of specified window sizes, in KB  \\
+Output: tuple containing 1. list of actual window sizes in KB 2. list of 5 bandwidth values in Gbits/sec for each window size   \\
+(  [sz1, ... , szn] ,  \\
+{[  [5x bw for sz1]  ,  ...  ,  [5x bw for szn]  ]}  )  \\
+\\
+\texttt{data{\_}band(fexp,band)}   \\
+Provides a list of effective bandwidth values, based on a parsed results file.\\
+Input: fexp = 'folder/experiment name'. band = list of effective bandwidth values in Mbits/sec.   \\
+Output: tuple containing 1. list of effective bandwidths in Mbits/sec 2. list of 5 percentiles for each bandwidth value.    \\
+(  [bw1, ... , bwn] ,  \\
+{[  [5x \% for bw1]  ,  ...  ,  [5x \% for szn]  ]}  )  \\
+\\
+\texttt{data13b(windows)} \\  
+Parses the results of experiment 13b.\\
+Input: list of specified window sizes in KB  \\
+Output: list of 5 bandwidths in Gbits/sec for each window size  \\
+{[  [5x bw for sz1]  ,  ...  ,  [5x bw for szn]  ]}
+\\
+\texttt{graph{\_}error(data)} \\
+Calculates error bars values, for plotting error bars.\\
+Input: list containing n repetitions for each data point. \\
+{[ [n x point 1], [n x point 2], ... , [n x point m]]}\\
+Output: tuple containing 1. list of median y-values 2. correctly formatted yerr for plotting error bars. \\
+(  [y1, y2, ... , yn] , \\
+{[ [below1, below2, ... , belown], [above1, above2, ... , aboven] ]})\\ 
+\\
+\subsection{\texttt{useful2.1.py}}
+This script provide useful functions for Lab 2.1\\
+
+\texttt{gettimes(exp)}  \\
+Parses an trace file and extracts a list of timestamps.
+Input: experiment name, eg. 'exp1a'.  \\ 
+Output: list of timestamps in seconds as strings. \\
+\\
+\texttt{getdiff(exp)}  \\
+Parses a trace file and provides a list of time gaps between timestamps.
+Input: experiment name  \\
+Output: list of timestamp differences in nanoseconds  \\
+\\
+
+\subsection{\texttt{useful2.2.py}}
+This script provide useful functions for Lab 2.2\\
+
+\texttt{gettimes(exp)}  \\
+Parses an trace file and extracts a list of timestamps.
+Input: experiment name, eg. 'exp1a'  \\ 
+Output: list of timestamps in seconds as strings \\
+\\
+\texttt{getdiff(exp)}  \\
+Parses a trace file and provides a list of time gaps between timestamps.
+Input: experiment name    \\
+Output: list of timestamp differences in microseconds  \\
+\\
+\texttt{getrtt(fname)}  \\
+Parses a trace file and provides a list of round trip times.
+Input: filename
+Prints examples of RTTs. \\
+Output: list of RTTs in microseconds. \\
+\\
+\subsection{\texttt{useful3.py}}
+\texttt{getdeltas(fexp, num)} \\  
+Parses a trace file and provides a list of inter arrival times.
+Input: exp = 'folder/experiment name', eg. '3.1/exp1a'. num = number of packets sent  \\
+Output: list of inter-arrival times in microseconds (float)   
+
+
+\end{document}
