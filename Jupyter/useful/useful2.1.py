@@ -1,7 +1,7 @@
 import re
-def gettimes(exp):
+def gettimes(exp,crsid):
     lines = ""
-    fname = '/root/L50Lab2/2.1/'+exp+'.txt'
+    fname = '/root/'+crsid+'/L50Lab2/2.1/'+exp+'.txt'
     with open(fname) as f:
         while True:
             line=f.readline()
@@ -10,10 +10,10 @@ def gettimes(exp):
     times = re.findall(r': (.*?) seconds',lines)
     return times
 
-def getdiff(exp):
+def getdiff(exp,crsid):
     if0_times= []
     if1_times= []
-    f=open("/root/L50Lab2/2.1/"+exp+".txt")
+    f=open("/root/"+crsid+"/L50Lab2/2.1/"+exp+".txt")
     for i in range(100000):
         intf = f.next()
         if ('0' in intf):

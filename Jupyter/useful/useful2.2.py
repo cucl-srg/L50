@@ -1,10 +1,10 @@
 from useful import ssh_cmd
 
-def getdiff(exp):
+def getdiff(exp,crsid):
     diff = []
-    with open('/root/L50Lab2/2.2/'+exp+'_0.txt') as f:
+    with open('/root/'+crsid+'/L50Lab2/2.2/'+exp+'_0.txt') as f:
 		lines1 = f.readlines()
-    with open('/root/L50Lab2/2.2/'+exp+'_1.txt') as f:
+    with open('/root/'+crsid+'/L50Lab2/2.2/'+exp+'_1.txt') as f:
 		lines2 = f.readlines()
     for i in range(100000):
         dif = float(lines1[i])-float(lines2[i])
@@ -12,15 +12,16 @@ def getdiff(exp):
     return diff
 
 
-def gettimes(exp):
-    fname = '/root/L50Lab2/2.2/'+exp+'.txt'
+def gettimes(exp,crsid):
+    fname = '/root/'+crsid+'/L50Lab2/2.2/'+exp+'.txt'
     with open(fname) as f:
         times=f.readlines()  
     return times
 
-def getrtt(fname):
+def getrtt(fname,crsid):
     rt = []
-    with open("/root/L50Lab2/2.2/"+fname) as f:
+    print crsid
+    with open("/root/"+crsid+"/L50Lab2/2.2/"+fname) as f:
         for i in range(10000):
             f.next()
             ts=f.next()
