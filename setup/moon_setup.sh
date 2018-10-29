@@ -1,4 +1,4 @@
-cd /root/moongen
+cd /root/MoonGen
 sudo ./bind-interfaces.sh
 sudo ./setup-hugetlbfs.sh
 
